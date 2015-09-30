@@ -1,0 +1,164 @@
+                                                                                  //FiltroPasabajasde200Hz 
+
+
+function [y, max] = FiltroPasabajasde200Hz (Entrada)
+
+    fNMenos1 = 0;
+    fNMenos2 = 0;
+    max = 0;
+    
+    a1 = -1.96;
+    a2 = 0.9605;
+    b0 = 0.000199;
+    b1 = 0.0003979;
+    b2 = 0.000199;
+    
+    n = length(Entrada);
+    y = [];
+    
+    for i = 1 : n
+        f = Entrada(i) - a1 * fNMenos1 - a2 * fNMenos2;
+        
+      
+        y(i) = b0 * f + b1 * fNMenos1 + b2 * fNMenos2;
+        
+        
+        fNMenos2 = fNMenos1;
+        fNMenos1 = f;
+    end
+end
+
+
+                                                                                       // FiltroPasabajasde5kHz
+
+function [y, max] = FiltroPasabajasde5kHz (Entrada)   
+    fNMenos1 = 0;
+    fNMenos2 = 0;
+    max = 0;
+    
+    a1 = -1.035;
+    a2 = 0.3678;
+    b0 = 0.08316;
+    b1 = 0.1663;
+    b2 = 0.08316;
+    
+    n = length(Entrada);
+    y = [];
+    
+    for i = 1 : n
+              
+        
+        f = Entrada(i) - a1 * fNMenos1 - a2 * fNMenos2;
+        
+     
+        
+        y(i) = b0 * f + b1 * fNMenos1 + b2 * fNMenos2;
+        
+        
+        fNMenos2 = fNMenos1;
+        fNMenos1 = f;
+    end
+end
+
+                                                                             // FiltroPasabajasde20kHz
+
+
+function [y, max] = FiltroPasabajasde20kHz(Entrada)
+ fNMenos1 = 0;
+fNMenos2 = 0;
+
+ a1 = 1.5912;
+ a2 = 0.6617;
+ b0 = 0.8132;
+ b1 = 1.626;
+ b2 = 0.8132;
+
+ n = length(Entrada);
+ y = [ ] ;
+ for i =1:1:n
+ f = Entrada ( i ) -a1*fNMenos1 -a2*fNMenos2 ;
+ y ( i ) = b0* f + b1*fNMenos1 +b2*fNMenos2 ;
+ fNMenos2 = fNMenos1 ;
+ fNMenos1 = f
+ end
+end
+
+
+                                                                                     //FiltroPasaaltasde20Hz
+
+function [y, max] = FiltroPasaaltasde20Hz (Entrada)
+
+
+ fNMenos1 = 0;
+fNMenos2 = 0;
+
+ a1 = -1.996;
+ a2 = 0.996;
+ b0 = 0.998;
+ b1 = -1.996;
+ b2 = 0.998;
+
+ n = length(Entrada);
+ y = [ ] ;
+ for i =1:1:n
+ f = Entrada ( i ) -a1*fNMenos1 -a2*fNMenos2 ;
+ y ( i ) = b0* f + b1*fNMenos1 +b2*fNMenos2 ;
+ fNMenos2 = fNMenos1 ;
+ fNMenos1 = f
+ end
+
+end
+
+          
+                                                                                    //FiltroPasaaltasde200Hz
+
+
+function [y, max] = FiltroPasaaltasde200Hz(Entrada)
+fNMenos1 = 0;
+fNMenos2 = 0;
+
+ a1 = -1.96;
+ a2 = 0.9605;
+ b0 = 1;
+ b1 = -2;
+ b2 = 1;
+
+ n = length(Entrada);
+ y = [ ] ;
+ for i =1:1:n
+ f = Entrada ( i ) -a1*fNMenos1 -a2*fNMenos2 ;
+ y ( i ) = b0* f + b1*fNMenos1 +b2*fNMenos2 ;
+ fNMenos2 = fNMenos1 ;
+ fNMenos1 = f
+ end
+
+end
+
+
+
+
+                                                                       //FiltroPasaaltasde5kHz
+
+
+function [y, max] = FiltroPasaaltasde5kHz(Entrada)
+
+
+ fNMenos1 = 0;
+fNMenos2 = 0;
+
+ a1 = -1.035;
+ a2 = 0.3678;
+ b0 = 0.6007;
+ b1 = -1.201;
+ b2 = 0.6007;
+
+ n = length(Entrada);
+ y = [ ] ;
+ for i =1:1:n
+ f = Entrada ( i ) -a1*fNMenos1 -a2*fNMenos2 ;
+ y ( i ) = b0* f + b1*fNMenos1 +b2*fNMenos2 ;
+ fNMenos2 = fNMenos1 ;
+ fNMenos1 = f
+ end
+end
+

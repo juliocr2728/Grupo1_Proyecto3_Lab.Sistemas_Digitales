@@ -1,0 +1,9 @@
+module Sumador(
+    input [23:0] Dato_A,
+    input [23:0] Dato_B,
+    output [23:0] Salida
+    );
+
+assign Salida = Dato_A + Dato_B;
+
+endmodule

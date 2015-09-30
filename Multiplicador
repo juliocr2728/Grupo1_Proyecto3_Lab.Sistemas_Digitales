@@ -1,0 +1,19 @@
+module Multiplicador
+#(parameter M = 8, F = 15)
+(	input wire signed[M + F : 0] a, b,
+	output wire signed[M + F : 0] producto
+	//output wire overflow
+    );
+	 
+	 wire signed[2 * (M + F) + 1 : 0] prod_intermedio;
+	 
+	 assign prod_intermedio = a * b;	 
+	 assign producto = prod_intermedio[M + 2 * F : F];
+	 
+	 //Comprobacion de overflow
+	 //assign overflow = (a == {(M+F+1){1'b0}} || b == {(M+F+1){1'b0}}) ? 1'b0 : (a[M+F] == b[M+F] && prod_intermedio[2*(M+F)+1 : 2*(M+F)-M] == {(M+2){1'b0}} && 
+	 //producto[M+F-1:0] != {(M+F){1'b0}}) ? 1'b0 : (a[M+F] != b[M+F] && 
+	 //prod_intermedio[2*(M+F)+1 : 2*(M+F)-M] == {(M+2){1'b1}} && producto[M+F-1:0] != {(M+F){1'b0}}) ? 1'b0 : 1'b1;
+	 
+endmodule
+

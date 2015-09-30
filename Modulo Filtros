@@ -1,0 +1,206 @@
+module Filtro #(parameter M = 8, F = 15)//Parametrización: M parte de la magnitud y F es la parte fraccionaria
+(
+    input signed [M+F:0] A1,
+    input signed [M+F:0] A2,
+    input signed [M+F:0] B0,
+    input signed [M+F:0] B1,
+    input signed [M+F:0] B2,
+    input clk,
+    input reset,
+    input CS,
+    input signed [M+F:0] Datos_entrada,
+    output reg signed [M+F:0] Datos_salida,
+    output reg Listo
+    );
+	 
+	 
+
+//Declaración de registros necesarios para la suma y multiplicación:
+//reg signed [M+F:0] Suma_1 = {(M+F+1){1'b0}};
+//reg signed [M+F:0] Suma_2 = 24'd0;
+//reg signed [M+F:0] Multi_1 = 24'd0;
+//reg signed [M+F:0] Multi_2 = 24'd0;
+reg signed [M+F:0] Datos_salida_sig = 24'd0;
+//reg signed [M+F:0] fNmenos1 = 24'd0;
+//reg signed [M+F:0] fNmenos2 = 24'd0;
+
+localparam  [2:0]  e0=3'b000, 
+						 e1=3'b001,
+						 e2=3'b010,
+						 e3=3'b011,
+						 e4=3'b100,
+						 e5=3'b101,
+						 e6=3'b110,
+						 e7=3'b111;
+						 
+
+
+//Declaración de los estados siguiente y actual a utilizar en la máquina de estados y otros valores e instaciaciones necesarias para el filtro 
+reg [2:0] estado_siguiente = 3'b000,estado_actual = 3'b000;
+
+reg [2:0] lineas_sel_mux_5 = 3'b000;
+reg [1:0] lineas_sel_mux_3_suma = 2'b00; 
+reg [1:0] lineas_sel_mux_3_multi = 2'b00; 
+
+wire [23:0] datos_salida_sumador;
+wire [23:0] datos_salida_multiplicador;
+wire [23:0] salida_reg_suma;
+wire [23:0] salida_reg_multi;
+wire [23:0] salida_datos_mux_1_suma;
+wire [23:0] salida_datos_mux_1_multi;
+wire [23:0] salida_datos_mux_2_multi;
+
+wire [23:0] salida_F;
+wire [23:0] salida_FNmenos1;
+wire [23:0] salida_FNmenos2;
+
+reg clk_F = 1'b0;
+reg clk_FNmenos1 = 1'b0;
+reg clk_FNmenos2 = 1'b0;
+
+Multiplicador Multiplicador_1 (.a(salida_datos_mux_1_multi), .b(salida_datos_mux_2_multi), .producto(datos_salida_multiplicador));
+Sumador Sumador_1 (.Dato_A(salida_datos_mux_1_suma), .Dato_B(salida_reg_multi), .Salida(datos_salida_sumador));
+MUX_3_entradas MUX_3_1 (.Dato_1(Datos_entrada),.Dato_2(salida_reg_suma),.Dato_3(salida_reg_multi),.Salida(salida_datos_mux_1_suma),.Seleccion(lineas_sel_mux_3_suma));
+MUX_3_entradas MUX_3_2 (.Dato_1(salida_FNmenos1),.Dato_2(salida_FNmenos2),.Dato_3(salida_reg_suma),.Salida(salida_datos_mux_2_multi),.Seleccion(lineas_sel_mux_3_multi));
+MUX_5_entradas MUX_5_1 (.Dato_1(A1),.Dato_2(A2),.Dato_3(B1),.Dato_4(B0),.Dato_5(B2),.Salida(salida_datos_mux_1_multi),.Seleccion(lineas_sel_mux_5));
+Modulo_registro Registro_Sum (.Entrada(datos_salida_sumador),.clk(),.Salida(salida_reg_suma));
+Modulo_registro Registro_Multi (.Entrada(datos_salida_multiplicador),.clk(),.Salida(salida_reg_multi));
+Modulo_registro FN (.Entrada(datos_salida_sumador),.clk(clk_F),.Salida(salida_F));
+Modulo_registro FNmenos1 (.Entrada(salida_F),.clk(clk_FNmenos1),.Salida(salida_FNmenos1));
+Modulo_registro FNmenos2 (.Entrada(salida_FNmenos1),.clk(clk_FNmenos2),.Salida(salida_FNmenos2));
+
+always @ (posedge clk , posedge reset )
+
+
+if  (reset) begin
+	      estado_actual <= e0 ;
+			Datos_salida <= 24'd0;
+			
+			/*
+			Suma_1 <= 24'd0 ;
+         Suma_2 <= 24'd0 ;
+         Multi_1 <= 24'd0;
+			Multi_2 <= 24'd0;
+			Datos_salida <= 24'd0;
+			fNmenos1 <= 24'd0;
+			fNmenos2 <= 24'd0;
+			*/
+			end
+	 
+    
+	 else begin
+	      estado_actual <= estado_siguiente;
+			Datos_salida <= Datos_salida_sig;
+			/*
+			Suma_1 <= Suma_1_sig;
+         Suma_2  <=  Suma_2_sig;
+         Multi_1  <= Multi_1_sig;
+			Multi_2  <= Multi_2_sig;
+			Datos_salida  <= Datos_salida_sig;
+			fNmenos1 <= fNmenos1_sig;
+			fNmenos2 <= fNmenos2_sig;
+			*/
+	 end	
+	 
+	 
+
+
+always @*
+
+
+
+begin
+
+/*
+Suma_1= Suma_1;
+Suma_2 = Suma_2;
+Multi_1 = Multi_1;
+Multi_2 = Multi_2;
+estado_siguiente = estado_actual;
+fNmenos1 = fNmenos1;
+fNmenos2_sig = fNmenos2;
+   */  
+	
+	estado_siguiente = estado_actual;
+     
+	  Datos_salida_sig = Datos_salida;
+	  Listo = 1'b0;
+	  
+	  
+	  case (estado_actual)
+	  
+	  e0: 
+	  
+	  begin
+	  Listo = 1'b1;
+	  if (CS == 1'b1)
+	  estado_siguiente = e1;
+	  end
+	  
+	  e1:
+	  
+	  begin
+	 lineas_sel_mux_3_suma = 2'b00;
+	 lineas_sel_mux_5 = 3'b000;
+	 lineas_sel_mux_3_multi = 2'b00;
+	  estado_siguiente = e2;
+	  end
+	  
+	  e2:
+	  
+	  begin
+	 
+	  lineas_sel_mux_5 = 3'b001;
+	  lineas_sel_mux_3_multi = 2'b01;
+	  estado_siguiente = e3;
+	  end
+	  
+	  e3:
+	  
+	  begin
+	  lineas_sel_mux_3_suma = 2'b01;
+	  lineas_sel_mux_5 = 3'b010;
+	  lineas_sel_mux_3_multi = 2'b00;
+	  estado_siguiente = e4;
+	  end
+	  
+	  e4:
+	  
+	  begin
+	 lineas_sel_mux_5 = 3'b010;
+	 lineas_sel_mux_3_multi = 2'b10;
+	 clk_F = 1'b1;
+	  estado_siguiente = e5;
+	  
+	  end
+	  
+	  e5:
+	  
+	  begin
+	 lineas_sel_mux_5 = 3'b100;
+	 lineas_sel_mux_3_multi = 2'b01;
+	  estado_siguiente = e6;
+	  end
+	  
+	  e6:
+	  
+	  begin
+	 lineas_sel_mux_3_suma = 2'b01;
+	  estado_siguiente = e7;
+	  end
+	  
+	  e7:
+	  
+	  begin
+	  clk_FNmenos1 = 1'b1;
+	  clk_FNmenos2 = 1'b1;
+	  estado_siguiente = e0;
+	  Datos_salida_sig = salida_reg_suma;
+	  end
+	  
+	  endcase  
+	  
+end 
+	
+
+endmodule

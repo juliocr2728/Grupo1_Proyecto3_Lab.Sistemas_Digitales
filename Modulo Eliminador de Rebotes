@@ -1,0 +1,35 @@
+module Eliminador_rebotes(
+ 
+ input [3:0] inboton,     //Declaramos la entrada tipo bus de 7 bits inp
+ input cclk,          //Declaramos la entrada clk
+ input clr,           //Declaramos la entrada clr
+ output [3:0] outboton	//Declaramos la salida tipo bus de 7 bits outboton
+ 
+    );
+
+
+
+reg [3:0] delay1;       //Declaramos la conexion auxiliar tipo reg delay1
+reg [3:0] delay2;       //Declaramos la conexion auxiliar tipo reg delay2
+reg [3:0] delay3;       //Declaramos la conexion auxiliar tipo reg delay3
+
+always @(posedge cclk, posedge clr) begin
+   if(clr) begin        //Si se activa clr
+      delay1<=0;        //el siguiente valor de delay1 sera 0
+      delay2<=0;        //el siguiente valor de delay2 sera 0
+      delay3<=0;        //el siguiente valor de delay3 sera 0
+   end
+   else begin           //De lo contrario
+      delay1<=inboton;      //el siguiente valor de delay1 sera inboton
+		delay2<=delay1;   //el siguiente valor de delay2 sera delay1
+      delay3<=delay2;   //el siguiente valor de delay3 sera delay2
+   end
+end
+
+//Si la entrada inp es 1 durante 3 ciclos de cclk  outp sera 1.
+assign outboton = delay1 & delay2 & delay3;   //outp sera 1 si delay1, delay2 y delay3 son 1.
+
+
+endmodule
+
+

@@ -1,0 +1,14 @@
+module MUX_5_entradas #(parameter N = 23) (
+    
+	 input [N:0] Dato_1,
+    input [N:0] Dato_2,
+    input [N:0] Dato_3,
+	 input [N:0] Dato_4,
+	 input [N:0] Dato_5,
+    output [N:0] Salida,
+    input [2:0] Seleccion
+    );
+ 
+assign Salida = (Seleccion == 3'b000) ? Dato_1 : (Seleccion == 3'b001) ? Dato_2 : (Seleccion == 3'b010) ? Dato_3 : (Seleccion == 3'b011) ? Dato_4 : Dato_5;
+
+endmodule

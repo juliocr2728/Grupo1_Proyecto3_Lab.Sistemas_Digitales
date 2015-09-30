@@ -1,0 +1,10 @@
+module Concatenador_filtros #(parameter M=8, F=15)
+(
+    input [11:0] datos_adc,
+    output [M+F:0] salida_datos_adc
+    );
+	 
+	 assign salida_datos_adc = {{(M+1){1'b0}}, datos_adc, {(F-12){1'b0}}};
+
+
+endmodule

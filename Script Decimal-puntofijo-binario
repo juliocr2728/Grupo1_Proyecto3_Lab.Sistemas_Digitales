@@ -1,0 +1,72 @@
+fid=fopen('datoin.txt' ,'r');
+fid2=fopen('datoout.txt','wt');
+
+while ~feof(fid)
+    line=fgets(fid);
+    n=sscanf(line,'%f');
+    
+    d = 15; 
+ a=n*(2^d);
+ if d<=14
+    b=fix(a);
+ else
+     b=round(a);
+ end
+    c= b/(2^d);
+ 
+ % h=   n/(2^-d)                                %Conversion decimal a binaria 
+                                         
+ u = sign(c);
+ t = round(2^d*abs(c));
+ [~,e] = log2(t);
+ s = dec2bin(t,max(d,e));
+% s(end-d+1)
+ if 0<=n && n<1 && (u==1||u==0) 
+     x='00000000'; 
+     s = ['0',x,'.',s(end-d+1:end)] 
+ elseif n>=1 && n<2
+ x='0000000'; 
+     s = ['0',x,s(1:end-d),'.',s(end-d+1:end)] 
+ elseif n>=2 && n<4
+ x='000000'; 
+     s = ['0',x,s(1:end-d),'.',s(end-d+1:end)] 
+ elseif  n>=4 && n<8
+      x='00000'; 
+    rango=['0',s(1:end-d)]
+    resolucion=s(end-d+1:end)
+      s = ['0',x,s(1:end-d),'.',s(end-d+1:end)] 
+ elseif  n>=8 && n<16
+  x='0000'; 
+     s = ['0',x,s(1:end-d),'.',s(end-d+1:end)] 
+ 
+ elseif  u==-1 && 0>n && -1 < n
+     x='00000000';     
+    s = ['1',x,'.',s(end-d+1:end)] 
+elseif -1>=n  && -2<n && u==-1
+ x='0000000'; 
+  s = ['1',x,s(1:end-d),'.',s(end-d+1:end)] 
+ elseif  u ==-1 && -2>=n && -4<n
+ x='000000'; 
+     s = ['1',x,s(1:end-d),'.',s(end-d+1:end)] 
+ elseif  u==-1 && -4>=n  && -8<n
+      x='00000'; 
+     s = ['1',x,s(1:end-d),'.',s(end-d+1:end)] 
+ elseif  u==-1 && -8>=n  && -16<n
+      x='0000'; 
+      s = ['1',x,s(1:end-d),'.',s(end-d+1:end)] 
+  elseif  u==-1 && -16 >=n 
+     x='000';
+      s = ['1',x,s(1:end-d),'.',s(end-d+1:end)] 
+ else
+      x='000';
+     s = ['0',s(1:end-d),'.',s((end-d+1:end))] 
+ end
+    
+    
+    fprintf(fid2, '%s\n',s);
+    
+    
+end
+
+fclose(fid);
+fclose(fid2);

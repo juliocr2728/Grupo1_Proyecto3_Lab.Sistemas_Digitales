@@ -1,0 +1,62 @@
+module adc(
+		input wire clk, 
+		input wire sdata,
+		output wire sclk,
+		output reg cs = 1,
+		output reg ready = 0,
+		output reg [11:0] dato_salida = 0
+    );
+	
+	localparam idle = 1'b0,
+	           lectura = 1'b1;
+					
+	reg [4:0] contador = 0, contador_next = 0;
+	reg [11:0] dato = 0, dato_next = 0, dato_salida_next = 0;
+	reg estado_actual = idle, estado_next = lectura;
+	
+	assign sclk = clk;
+					
+	always@(posedge clk)
+		begin
+			contador <= contador_next;
+			dato <= dato_next;
+			estado_actual <= estado_next;
+			dato_salida <= dato_salida_next;
+		end
+		
+	always@*
+      begin
+			cs = 1'b0;
+			ready = 1'b0;
+			contador_next = contador;
+			dato_next = dato;
+			estado_next = estado_actual;
+			dato_salida_next = dato_salida;
+			
+			case (estado_actual)
+				idle:
+				   begin
+						cs = 1'b1;
+						estado_next = lectura;
+						contador_next = 5'd1;
+						dato_next = 12'd0;
+						ready = 1'b1;
+					end
+				lectura:
+				   begin
+						if (contador == 5'd16)
+						   begin
+								estado_next = idle;
+								dato_salida_next = dato;
+								contador_next = 5'd0;
+							end
+					   else
+						   begin
+								dato_next = {dato[10:0], sdata};
+								contador_next = contador + 1'b1;
+							end
+					end
+			endcase
+      end
+
+endmodule

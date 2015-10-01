@@ -1,6 +1,7 @@
 module ADC_interfaz(
 		input wire clk, 
 		input wire sdata,
+		input wire señal_al_adc,
 		output wire sclk,
 		output reg cs = 1,
 		output reg ready = 0,
@@ -37,10 +38,15 @@ localparam idle = 1'b0,
 				idle:
 				   begin
 						cs = 1'b1;
-						estado_next = lectura;
+						//estado_next = lectura;
 						contador_next = 5'd1;
-						dato_next = 12'd0;
+						dato_next = dato_salida;
 						ready = 1'b1;
+						
+						if (señal_al_adc==1'b1)
+						estado_siguiente = lectura;
+						
+						
 					end
 				lectura:
 				   begin
@@ -60,3 +66,4 @@ localparam idle = 1'b0,
       end
 
 endmodule
+

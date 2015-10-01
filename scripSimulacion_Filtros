@@ -1,0 +1,60 @@
+clc
+clear
+
+%Frecuencias de trabajo
+f = [20 100 1000 3000 8000 14000 25000];
+
+%Periodo de muestreo para 44.1 KHz
+periodo_muestreo = 1 / 44100;
+
+for i = 1:7
+	%Vector de muestras.
+	%Debe tener suficientes muestras para representar unos cuantos
+	%periodos de la senal (2 periodos o mas).
+	t = 0 : periodo_muestreo : 5/f(i);
+
+	%Vector para la señal senoidal
+	
+    y = sin(2*3.14156*f(i).*t);
+
+	%crea una nueva ventana
+
+figure
+	%Pasabajas de 200 Hz
+	[pb200] = FiltroPasabajasde200Hz(y);
+	subplot(2, 3, 1);
+	plot(t, pb200, t, y);
+	title(['Pasabajas de 200 Hz - (f = ', num2str(f(i)), ' Hz)'])
+
+	%Pasabajas de 5 kHz
+	[pb5k] = FiltroPasabajasde5kHz(y);
+	subplot(2, 3, 2);
+	plot(t, pb5k, t, y);
+	title(['Pasabajas de 5 kHz - (f = ', num2str(f(i)), ' Hz)'])
+
+
+	%Pasabajas de 20 kHz
+	[pb20k] = FiltroPasabajasde20kHz(y);
+	subplot(2, 3, 3);
+	plot(t, pb20k, t, y);
+	title(['Pasabajas de 20 kHz - (f = ', num2str(f(i)), ' Hz)'])
+
+	%Pasaaltas de 20 Hz
+	[pa20] = FiltroPasaaltasde20Hz(y);
+	subplot(2, 3, 4);
+	plot(t, pa20, t, y);
+	title(['Pasaaltas de 20 Hz - (f = ', num2str(f(i)), ' Hz)'])
+
+	%Pasaaltas de 200 Hz
+	[pa200] = FiltroPasaaltasde200Hz(y);
+	subplot(2, 3, 5);
+	plot(t, pa200, t, y);
+	title(['Pasaaltas de 200 Hz - (f = ', num2str(f(i)), ' Hz)'])
+
+	%Pasaaltas de 5 kHz
+	[pa5k] = FiltroPasaaltasde5kHz(y);
+	subplot(2, 3, 6);
+	plot(t, pa5k, t, y);
+	title(['Pasaaltas de 5 kHz - (f = ', num2str(f(i)), ' Hz)'])
+	
+end

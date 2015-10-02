@@ -63,8 +63,8 @@ Sumador Sumador_1 (.Dato_A(salida_datos_mux_1_suma), .Dato_B(salida_reg_multi), 
 MUX_3_entradas MUX_3_1 (.Dato_1(Datos_entrada),.Dato_2(salida_reg_suma),.Dato_3(salida_reg_multi),.Salida(salida_datos_mux_1_suma),.Seleccion(lineas_sel_mux_3_suma));
 MUX_3_entradas MUX_3_2 (.Dato_1(salida_FNmenos1),.Dato_2(salida_FNmenos2),.Dato_3(salida_reg_suma),.Salida(salida_datos_mux_2_multi),.Seleccion(lineas_sel_mux_3_multi));
 MUX_5_entradas MUX_5_1 (.Dato_1(A1),.Dato_2(A2),.Dato_3(B1),.Dato_4(B0),.Dato_5(B2),.Salida(salida_datos_mux_1_multi),.Seleccion(lineas_sel_mux_5));
-Modulo_registro Registro_Sum (.Entrada(datos_salida_sumador),.clk(),.Salida(salida_reg_suma));
-Modulo_registro Registro_Multi (.Entrada(datos_salida_multiplicador),.clk(),.Salida(salida_reg_multi));
+Modulo_registro Registro_Sum (.Entrada(datos_salida_sumador),.clk(clk),.Salida(salida_reg_suma));
+Modulo_registro Registro_Multi (.Entrada(datos_salida_multiplicador),.clk(clk),.Salida(salida_reg_multi));
 Modulo_registro FN (.Entrada(datos_salida_sumador),.clk(clk_F),.Salida(salida_F));
 Modulo_registro FNmenos1 (.Entrada(salida_F),.clk(clk_FNmenos1),.Salida(salida_FNmenos1));
 Modulo_registro FNmenos2 (.Entrada(salida_FNmenos1),.clk(clk_FNmenos2),.Salida(salida_FNmenos2));
@@ -126,6 +126,14 @@ fNmenos2_sig = fNmenos2;
 	  Datos_salida_sig = Datos_salida;
 	  Listo = 1'b0;
 	  
+	 //Valores por defecto de registros de los MUX
+	 
+	 lineas_sel_mux_3_suma = 2'b00;
+	 lineas_sel_mux_5 = 3'b000;
+	 lineas_sel_mux_3_multi = 2'b00;
+	 clk_F = 1'b0;	
+	 clk_FNmenos1 = 1'b0;
+	 clk_FNmenos2 = 1'b0;
 	  
 	  case (estado_actual)
 	  
@@ -199,6 +207,12 @@ fNmenos2_sig = fNmenos2;
 	  end
 	  
 	  endcase  
+	  
+end 
+	
+
+endmodule
+
 	  
 end 
 	

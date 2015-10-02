@@ -1,5 +1,6 @@
 module MUX_4_entradas #(parameter N = 23)
 (
+
  input [N:0] Dato_1,
  input [N:0] Dato_2,
  input [N:0] Dato_3,

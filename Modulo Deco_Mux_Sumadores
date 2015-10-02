@@ -7,14 +7,16 @@ always @* begin
 	if (Entradas == 4'b0001)
 		Salidas = 2'b00;
 
-	if (Entradas == 4'b0010)
+	 else if (Entradas == 4'b0010)
 		Salidas = 2'b01;
 		
-	if (Entradas == 4'b0100)
+	else if (Entradas == 4'b0100)
 		Salidas = 2'b10;
 		
-	if (Entradas == 4'b1000)
+	else if (Entradas == 4'b1000)
 		Salidas = 2'b11;
+	else
+	   Salidas = 2'b11;
 	
 end
 

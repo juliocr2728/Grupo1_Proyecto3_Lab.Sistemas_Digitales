@@ -1,0 +1,73 @@
+module Test_FiltroPA200Hz;
+
+	// Inputs
+	reg [23:0] A1;
+	reg [23:0] A2;
+	reg [23:0] B0;
+	reg [23:0] B1;
+	reg [23:0] B2;
+	reg clk;
+	reg reset;
+	reg CS;
+	reg [23:0] Datos_entrada;
+
+	// Outputs
+	wire [23:0] Datos_salida;
+	wire Listo;
+   reg [23:0] ENTRADA [43:0];
+   integer i;
+
+
+	// Instantiate the Unit Under Test (UUT)
+	Filtro uut (
+		.A1(A1), 
+		.A2(A2), 
+		.B0(B0), 
+		.B1(B1), 
+		.B2(B2), 
+		.clk(clk), 
+		.reset(reset), 
+		.CS(CS), 
+		.Datos_entrada(Datos_entrada), 
+		.Datos_salida(Datos_salida), 
+		.Listo(Listo)
+	);
+
+	initial begin
+			$readmemb("1000Hz.txt", ENTRADA);
+		// Initialize Inputs
+		A1 = -24'sd64225;
+		A2 = 24'd31474;
+		B0 = 24'd32768;
+		B1 = -24'sd65536;
+		B2 = 24'd32768;
+		clk = 0;
+		reset = 0;
+		CS = 0;
+		Datos_entrada = 0;
+
+		//Mandar los datos en forma serial
+		for (i = 0; i < 44; i = i + 1) begin    // varia conforme el tamaño del arreglo en in.txt
+			//for (j = 0; j < 23; j = j + 1) begin
+				
+				 Datos_entrada= ENTRADA[i];
+				
+				#30;
+				CS = 1'b1;
+				#25;
+				CS=1'b0;
+				
+				#180;
+				
+			end
+
+
+		// Wait 100 ns for global reset to finish
+		 
+		  
+		// Add stimulus here
+
+
+	end
+      initial forever #10 clk = ~clk;
+endmodule

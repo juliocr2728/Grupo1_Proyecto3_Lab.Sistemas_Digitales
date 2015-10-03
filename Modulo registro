@@ -1,7 +1,7 @@
 module Modulo_registro(
     input [23:0] Entrada,
     input clk,
-	 output reg [23:0] Salida
+    output reg [23:0] Salida = 24'b0
    );
 
 always @(posedge clk)

@@ -22,7 +22,31 @@
 // 
 ////////////////////////////////////////////////////////////////////////////////
 
-module Test_FiltroPA5KHz;
+`timescale 1ns / 1ps
+
+////////////////////////////////////////////////////////////////////////////////
+// Company: 
+// Engineer:
+//
+// Create Date:   10:55:35 10/05/2015
+// Design Name:   Filtro
+// Module Name:   G:/Proyecto3/Test_FiltroPA5k.v
+// Project Name:  Proyecto3
+// Target Device:  
+// Tool versions:  
+// Description: 
+//
+// Verilog Test Fixture created by ISE for module: Filtro
+//
+// Dependencies:
+// 
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+////////////////////////////////////////////////////////////////////////////////
+
+module Test_FiltroPA5k;
 
 	// Inputs
 	reg [23:0] A1;
@@ -38,8 +62,11 @@ module Test_FiltroPA5KHz;
 	// Outputs
 	wire [23:0] Datos_salida;
 	wire Listo;
-   reg [23:0] ENTRADA [4:0];
-   integer i;
+	wire overflow;
+	
+	reg [23:0] ENTRADA [0:43];
+	integer i;
+	integer FileSaveData;
 
 	// Instantiate the Unit Under Test (UUT)
 	Filtro uut (
@@ -56,24 +83,25 @@ module Test_FiltroPA5KHz;
 		.Listo(Listo)
 	);
 
-	initial begin 
-	  $readmemb("8000Hz.txt", ENTRADA);
-		// Initialize Inputs
-		A1 = -24'sd33915;
-		A2 = 24'd12052;
-		B0 = 24'd19684;
-		B1 = -24'sd39354;
-		B2 = 24'd19684;
+	initial begin
+		
+		$readmemb("2rampa1000Hz44.txt", ENTRADA);
+		FileSaveData = $fopen("salidaPA5kHz(2).txt","w");
+		A1 = 24'b000000001000010001111011;
+		A2 = 24'b111111111101000011101100;
+		B0 = 24'b000000000100110011100011;  
+		B1 = 24'b111111110110011001000110; 
+		B2 = 24'b000000000100110011100011;
 		clk = 0;
 		reset = 0;
 		CS = 0;
 		Datos_entrada = 0;
-
+		
 		//Mandar los datos en forma serial
-		for (i = 0; i < 5; i = i + 1) begin    // varia conforme el tamaño del arreglo en in.txt
+		for (i = 0; i < 45; i = i + 1) begin    // varia conforme el tamaño del arreglo en in.txt
 			//for (j = 0; j < 23; j = j + 1) begin
-				
-				 Datos_entrada= ENTRADA[i];
+				$fwrite(FileSaveData,"%b\n", Datos_salida);
+				 Datos_entrada = ENTRADA[i];
 				
 				#30;
 				CS = 1'b1;
@@ -83,14 +111,15 @@ module Test_FiltroPA5KHz;
 				#180;
 				
 			end
-
-
-		// Wait 100 ns for global reset to finish
-		 
-		  
-		// Add stimulus here
-
-
+			
+		$fclose(FileSaveData);
+		$finish;
+	
 	end
-      initial forever #10 clk = ~clk;
+	
+
+		
+	initial forever #10 clk = ~clk;
+
+      
 endmodule

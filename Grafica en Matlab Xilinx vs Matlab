@@ -1,0 +1,61 @@
+%Cargar los datos del xilinx
+clc
+
+[archivo,ruta] = uigetfile('*.txt','salidaPA200Hz');%abrir ventana para seleccionr archivo
+if archivo==0
+    return;
+else
+    
+    fid =fopen([ruta archivo],'r');
+
+    for i = 1 : 1 : 44
+        [A, cuenta] = fscanf(fid,'%s\r\n', 1);
+        [dec] = PuntoFijoADecimal(A, 8);
+        d(i) = dec;
+    end
+
+    t = 1:1:44;
+    %d(45) = ;
+    d = d(1:44);
+    
+    
+    fclose(fid);
+end
+
+
+
+[archivo,ruta] = uigetfile('*.txt','DATOS ENTRADA');
+if archivo==0
+    return;
+else
+    
+    fid =fopen([ruta archivo],'r');
+
+      for i = 1 : 1 : 44
+        [A, cuenta] = fscanf(fid,'%s\r\n', 1);
+        [dec] = PuntoFijoADecimal(A, 8)
+        e(i) = dec;
+    end
+
+    t = 1:1:44;
+    
+    
+    fclose(fid);
+end
+
+[y, max] = FiltroPasaaltasde200Hz(e)   %Simplemente cambiar la formula para cada filtro
+
+y(1)
+y(2)
+
+%plot(t,d,'-r',t,e,'-g', t, y, '-b');
+%xlabel('Rojo: Xilinx   Verde: Entrada    Azul: Matlab');
+
+subplot(2, 1, 1);
+%d = d ./2;
+plot(t, d, '-r')
+xlabel('Datos de Xilinx (Pasaaltas de 200Hz)');
+
+subplot(2, 1, 2);
+plot(t, y, '-b')
+xlabel('Datos de Matlab (Pasaaltas de 200Hz)');

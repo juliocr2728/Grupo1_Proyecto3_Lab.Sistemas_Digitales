@@ -1,4 +1,4 @@
-module Test_FiltroPB200Hz;
+module Test_PB200Hz;
 
 	// Inputs
 	reg [23:0] A1;
@@ -14,8 +14,10 @@ module Test_FiltroPB200Hz;
 	// Outputs
 	wire [23:0] Datos_salida;
 	wire Listo;
-reg [23:0] ENTRADA [43:0];
-integer i;
+	
+reg [23:0] ENTRADA [0:43];
+	integer i;
+	integer FileSaveData;
 
 	// Instantiate the Unit Under Test (UUT)
 	Filtro uut (
@@ -33,25 +35,25 @@ integer i;
 	);
 
 	initial begin
+		
 	
-$readmemb("1000Hz.txt", ENTRADA);
-	// Initialize Inputs
-		A1 = -24'sd64225;
-		A2 = 24'd31474;
-		B0 = 24'd7;
-		B1 = 24'd13;
-		B2 = 24'd7;
+		$readmemb("2rampa1000Hz44.txt", ENTRADA);
+		FileSaveData = $fopen("salidaPB200Hz.txt","w");
+		A1 = 24'b000000001111101011100001;
+		A2 = 24'b111111111000010100001111;
+		B0 = 24'b000000000000000000000110;
+		B1 = 24'b000000000000000000001101;
+		B2 = 24'b000000000000000000000110;
 		clk = 0;
 		reset = 0;
 		CS = 0;
 		Datos_entrada = 0;
-
 		
 		//Mandar los datos en forma serial
-		for (i = 0; i < 44; i = i + 1) begin    // varia conforme el tamaño del arreglo en in.txt
+		for (i = 0; i < 45; i = i + 1) begin    // varia conforme el tamaño del arreglo en in.txt
 			//for (j = 0; j < 23; j = j + 1) begin
-				
-				 Datos_entrada= ENTRADA[i];
+				$fwrite(FileSaveData,"%b\n", Datos_salida);
+				 Datos_entrada = ENTRADA[i];
 				
 				#30;
 				CS = 1'b1;
@@ -61,14 +63,15 @@ $readmemb("1000Hz.txt", ENTRADA);
 				#180;
 				
 			end
-
-
-		// Wait 100 ns for global reset to finish
-		 
-		  
-		// Add stimulus here
-
-
+			
+		$fclose(FileSaveData);
+		$finish;
+	
 	end
-      initial forever #10 clk = ~clk;
+	
+
+		
+	initial forever #10 clk = ~clk;
+
+      
 endmodule

@@ -1,4 +1,7 @@
 module Modulo_principal_filtros #(parameter M =8 ,F =15)
+
+
+
 ( 	 input sdata,
 	 input [3:0] switches_bandas,
 	 input reset,
@@ -166,22 +169,21 @@ Concatenador_filtros Concatenador_filtro_20Hz_PB (.datos_adc(datos_salida_adc_in
 
 //Filtros pasoaltos:
 
-Filtro Filtro_20_Hz_PA (.A1(-24'sd65405), .A2(24'd32637), .B0(24'd32702), .B1(-24'sd65405), .B2(24'd32702), .clk(clk_filtros), .reset(reset), .CS(CS_1), .Datos_entrada(concatenador_20Hz_sal), .Datos_salida(salida_filtro_20Hz_PB), .Listo(Listo_1));
-Filtro Filtro_200_Hz_PA (.A1(-24'sd64225), .A2(24'd31474), .B0(24'd32768), .B1(-24'sd65536), .B2(24'd32768), .clk(clk_filtros), .reset(reset), .CS(CS_2), .Datos_entrada(concatenador_20Hz_sal), .Datos_salida(salida_filtro_200Hz_PB), .Listo(Listo_2));
-Filtro Filtro_5kHz_PA (.A1(-24'sd33915), .A2(24'd12052), .B0(24'd19684), .B1(-24'sd39354), .B2(24'd19684), .clk(clk_filtros), .reset(reset), .CS(CS_3), .Datos_entrada(concatenador_20Hz_sal), .Datos_salida(salida_filtro_5kHz_PB), .Listo(Listo_3));
+Filtro Filtro_20_Hz_PA (.A1(24'b000000001111111101111101), .A2(24'b111111111000000010000100), .B0(24'b000000000111111110111110), .B1(24'b111111110000000010000100), .B2(24'b000000000111111110111110), .clk(clk_filtros), .reset(reset), .CS(CS_1), .Datos_entrada(concatenador_20Hz_sal), .Datos_salida(salida_filtro_20Hz_PB), .Listo(Listo_1));
+Filtro Filtro_200_Hz_PA (.A1(24'b000000001111101011100001), .A2(24'b111111111000010100001111), .B0(24'b000000001000000000000000), .B1(24'b111111110000000000000000), .B2(24'b000000001000000000000000), .clk(clk_filtros), .reset(reset), .CS(CS_2), .Datos_entrada(concatenador_20Hz_sal), .Datos_salida(salida_filtro_200Hz_PB), .Listo(Listo_2));
+Filtro Filtro_5kHz_PA (.A1(24'b000000001000010001111011), .A2(24'b111111111101000011101100), .B0(24'b000000000100110011100011), .B1(24'b111111110110011001000110), .B2(24'b000000000100110011100011), .clk(clk_filtros), .reset(reset), .CS(CS_3), .Datos_entrada(concatenador_20Hz_sal), .Datos_salida(salida_filtro_5kHz_PB), .Listo(Listo_3));
 
 //Filtros pasobajos: 
 
-Filtro Filtro_200_Hz_PB (.A1(-24'sd64225), .A2(24'd31474), .B0(24'd7), .B1(24'd13), .B2(24'd7), .clk(clk_filtros), .reset(reset), .CS(CS_4), .Datos_entrada(salida_filtro_20Hz_PB), .Datos_salida(salida_filtro_200Hz_PA), .Listo(Listo_4));
-Filtro Filtro_5kHz_PB (.A1(-24'sd33915), .A2(24'd12052), .B0(24'd2725), .B1(24'd5449), .B2(24'd2725), .clk(clk_filtros), .reset(reset), .CS(CS_5), .Datos_entrada(salida_filtro_200Hz_PB), .Datos_salida(salida_filtro_5kHz_PA), .Listo(Listo_5));
-Filtro Filtro_20kHz_PB (.A1(24'd52134), .A2(24'd21683), .B0(24'd26647), .B1(24'd53281), .B2(24'd26647), .clk(clk_filtros), .reset(reset), .CS(CS_6), .Datos_entrada(salida_filtro_5kHz_PB), .Datos_salida(salida_filtro_20kHz_PA), .Listo(Listo_6));
-
+Filtro Filtro_200_Hz_PB (.A1(24'b000000001111101011100001), .A2(24'b111111111000010100001111), .B0(24'b000000000000000000000110), .B1(24'b000000000000000000001101), .B2(24'b000000000000000000000110), .clk(clk_filtros), .reset(reset), .CS(CS_4), .Datos_entrada(salida_filtro_20Hz_PB), .Datos_salida(salida_filtro_200Hz_PA), .Listo(Listo_4));
+Filtro Filtro_5kHz_PB (.A1(24'b000000001000010001111011), .A2(24'b111111111101000011101100), .B0(24'b000000000000101010100100), .B1(24'b000000000001010101001001), .B2(24'b000000000000101010100100), .clk(clk_filtros), .reset(reset), .CS(CS_5), .Datos_entrada(salida_filtro_200Hz_PB), .Datos_salida(salida_filtro_5kHz_PA), .Listo(Listo_5));
+Filtro Filtro_20kHz_PB (.A1(24'b111111110011010001011011), .A2(24'b111111111010101101001110), .B0(24'b000000000110100000010110), .B1(24'b000000001101000000100000), .B2(24'b000000000110100000010110), .clk(clk_filtros), .reset(reset), .CS(CS_6), .Datos_entrada(salida_filtro_5kHz_PB), .Datos_salida(salida_filtro_20kHz_PA), .Listo(Listo_6));
+																																																	
 
 Deco_Mux_Sumadores Deco_Mux (.Entradas(salida_eliminador_reb),.Salidas(salidas_para_seleccion));
 Sumador Sumador_1 (.Dato_A(salida_filtro_200Hz_PA),.Dato_B(salida_filtro_5kHz_PA),.Salida(salida_sumador_1));
 Sumador Sumador_2 (.Dato_A(salida_filtro_20kHz_PA),.Dato_B(salida_sumador_1),.Salida(salida_sumado_todo));
 MUX_4_entradas MUX_seleccion_filtro_salida (.Dato_1(salida_filtro_200Hz_PA),.Dato_2(salida_filtro_5kHz_PA),.Dato_3(salida_filtro_20kHz_PA),.Dato_4(salida_sumado_todo),.Salida(dato_salida_MUX),.Seleccion(salidas_para_seleccion));
-
 
 assign salida_de_datos = dato_salida_MUX;
 		
